@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<channels>
+    <channel>
+        <name>ZJWS-HD</name>
+        <m3u8_name>ZJWS-HD</m3u8_name>
+        <source_primary><![CDATA[http://112.25.7.137/gitv_live/ZJWS-HD/ZJWS-HD.m3u8]]></source_primary>
+        <source_standby><![CDATA[http://112.25.7.137/gitv_live/ZJWS-HD/ZJWS-HD.m3u8]]></source_standby>
+        <sync_path>/data%s/www/gitv_live/ZJWS-HD/</sync_path>
+        <ts_segment_url_prefix>/gitv_live/ZJWS-HD/</ts_segment_url_prefix>
+        <bitrate>1.5</bitrate>
+    </channel>
+</channels>

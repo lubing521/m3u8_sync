@@ -1,0 +1,130 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+CC	Makefile	/^CC           = gcc$/;"	m
+CFLAGS	Makefile	/^CFLAGS       = -g -W -Wall -Werror -Wno-unused-parameter -Wunused-function \\$/;"	m
+CONFIG_FILE	main.c	8;"	d	file:
+LIBS	Makefile	/^LIBS         = -lutils -lxml2 -lz -lm -lcurl$/;"	m
+LOG_DST_CONSOLE	config.h	21;"	d
+LOG_DST_FILE	config.h	22;"	d
+LOG_DST_SYSLOG	config.h	23;"	d
+M3U8_BUFFER_SIZE	channel_sync.h	25;"	d
+MAIN_EXE	Makefile	/^MAIN_EXE     = m3u8_sync$/;"	m
+MAX_CHANNEL_COUNT	channel.h	21;"	d
+MAX_SEGMENT_COUNT	m3u8.h	21;"	d
+OBJS	Makefile	/^OBJS         = $(OBJS_DIR)\/main.o            \\$/;"	m
+OBJS_DIR	Makefile	/^OBJS_DIR     = objs$/;"	m
+WORK_DIR	main.c	7;"	d	file:
+_CHANNEL_H_	channel.h	19;"	d
+_CHANNEL_SYNC_H_	channel_sync.h	19;"	d
+_CONFIG_H_	config.h	19;"	d
+_HTTP_DOWNLOAD_H_	http_download.h	19;"	d
+_M3U8_H_	m3u8.h	19;"	d
+_channel_session_t	channel_sync.h	/^typedef struct _channel_session_t {$/;"	s
+_channel_sessions_t	channel_sync.h	/^typedef struct _channel_sessions_t {$/;"	s
+_channel_t	channel.h	/^typedef struct _channel_t {$/;"	s
+_channels	main.c	/^channels_t         *_channels       = NULL;$/;"	v
+_channels_t	channel.h	/^typedef struct _channels_t {$/;"	s
+_config	main.c	/^config_t           *_config        = NULL;$/;"	v
+_config_file	main.c	/^char               *_config_file   = CONFIG_FILE;$/;"	v
+_config_t	config.h	/^typedef struct _config_t {$/;"	s
+_cur_time	main.c	/^struct timeval      _cur_time;$/;"	v	typeref:struct:timeval
+_http_buffer_t	http_download.h	/^typedef struct _http_buffer_t {$/;"	s
+_http_file_t	http_download.h	/^typedef struct _http_file_t {$/;"	s
+_last_time	main.c	/^struct timeval      _last_time;$/;"	v	typeref:struct:timeval
+_m3u8_info_t	m3u8.h	/^typedef struct _m3u8_info_t {$/;"	s
+_m3u8_segment_t	m3u8.h	/^typedef struct _m3u8_segment_t {$/;"	s
+_m3u8_t	m3u8.h	/^typedef struct _m3u8_t {$/;"	s
+_main_continue	main.c	/^int                 _main_continue = 1;$/;"	v
+_sessions	main.c	/^channel_sessions_t *_sessions       = NULL; $/;"	v
+bitrate	channel.h	/^    int   bitrate;                  \/* 该节目的码率, 单位M *\/$/;"	m	struct:_channel_t
+buffer	http_download.h	/^    char  *buffer;          \/\/存放HTTP请求返回内容$/;"	m	struct:_http_buffer_t
+buffer_size	http_download.h	/^    size_t buffer_size;     \/\/buffer的总的大小$/;"	m	struct:_http_buffer_t
+channel	channel_sync.h	/^    channel_t *channel;                     \/* 频道信息 *\/$/;"	m	struct:_channel_session_t
+channel_count	channel.h	/^    int channel_count;$/;"	m	struct:_channels_t
+channel_destroy	channel.c	/^void channel_destroy(channels_t *channels)$/;"	f
+channel_file	config.h	/^    char  *channel_file;                         \/\/频道列表文件$/;"	m	struct:_config_t
+channel_load	channel.c	/^channels_t *channel_load(char *channel_file)$/;"	f
+channel_send_stop_signal	channel_sync.c	/^int channel_send_stop_signal(channel_session_t *channel_session)$/;"	f
+channel_session_t	channel_sync.h	/^} channel_session_t;$/;"	t	typeref:struct:_channel_session_t
+channel_sessions	channel_sync.h	/^    channel_session_t channel_sessions[MAX_CHANNEL_COUNT];$/;"	m	struct:_channel_sessions_t
+channel_sessions_t	channel_sync.h	/^} channel_sessions_t;$/;"	t	typeref:struct:_channel_sessions_t
+channel_start_sync	channel_sync.c	/^int channel_start_sync(channel_session_t *channel_session)$/;"	f
+channel_sync_func	channel_sync.c	/^static void *channel_sync_func(void *user_data)$/;"	f	file:
+channel_sync_stop	channel_sync.c	/^int channel_sync_stop(channel_session_t *channel_session)$/;"	f
+channel_t	channel.h	/^} channel_t;$/;"	t	typeref:struct:_channel_t
+channels	channel.h	/^    channel_t channels[MAX_CHANNEL_COUNT];$/;"	m	struct:_channels_t
+channels_start_sync	channel_sync.c	/^channel_sessions_t *channels_start_sync(channels_t *channels)$/;"	f
+channels_stop_sync	channel_sync.c	/^int channels_stop_sync(channel_sessions_t *sessions)$/;"	f
+channels_t	channel.h	/^} channels_t;$/;"	t	typeref:struct:_channels_t
+combine_ts_segment_url	channel_sync.c	/^static int combine_ts_segment_url(char *m3u8_url, char *m3u8_segment_url, char *ts_segment_url, int size) {$/;"	f	file:
+config_dump	config.c	/^void config_dump(config_t *config)$/;"	f
+config_free	config.c	/^void config_free(config_t *config)$/;"	f
+config_item_handler	config.c	/^static int config_item_handler(char *key, char *value, void *userp)$/;"	f	file:
+config_load	config.c	/^config_t *config_load(char *path)$/;"	f
+config_t	config.h	/^} config_t;$/;"	t	typeref:struct:_config_t
+create_daemon_process	main.c	/^static int create_daemon_process()$/;"	f	file:
+daemon	config.h	/^    int    daemon;                               \/\/是否以daemon进程方式运行$/;"	m	struct:_config_t
+dns_cache_time	config.h	/^    int    dns_cache_time;                       \/\/DNS缓存有效时间，单位秒 $/;"	m	struct:_config_t
+duration	m3u8.h	/^    int duration;$/;"	m	struct:_m3u8_segment_t
+fp	http_download.h	/^    FILE *fp;$/;"	m	struct:_http_file_t
+http_buffer_t	http_download.h	/^} http_buffer_t;$/;"	t	typeref:struct:_http_buffer_t
+http_close	http_download.c	/^void http_close()$/;"	f
+http_download_to_disk	http_download.c	/^int http_download_to_disk(char *url, char *file, float *download_speed)$/;"	f
+http_download_to_disk2	http_download.c	/^int http_download_to_disk2(char *url, char *file, int times, int *retry, float *download_speed)$/;"	f
+http_download_to_memory	http_download.c	/^int http_download_to_memory(char *url, char *buffer, int size) $/;"	f
+http_download_to_memory2	http_download.c	/^int http_download_to_memory2(char *url, char *buffer, int size, int times, int *retry)$/;"	f
+http_file_t	http_download.h	/^} http_file_t;$/;"	t	typeref:struct:_http_file_t
+http_init	http_download.c	/^void http_init()$/;"	f
+http_retry_count	config.h	/^    int    http_retry_count;                     \/\/HTTP访问失败重试次数$/;"	m	struct:_config_t
+http_timeout	config.h	/^    int    http_timeout;                         \/\/HTTP访问超时时间，单位秒$/;"	m	struct:_config_t
+http_write_data_to_disk	http_download.c	/^static size_t http_write_data_to_disk(void *ptr, size_t size, size_t nmemb, void *user_data)$/;"	f	file:
+http_write_data_to_memory	http_download.c	/^static size_t http_write_data_to_memory(void *ptr, size_t size, size_t nmemb, void *user_data)$/;"	f	file:
+install_signals	main.c	/^static int install_signals(void){$/;"	f	file:
+last_m3u8	channel_sync.h	/^    m3u8_t    *last_m3u8;                   \/*  *\/$/;"	m	struct:_channel_session_t
+length	m3u8.h	/^    int length;$/;"	m	struct:_m3u8_info_t
+log_dst	config.h	/^    int    log_dst;                              \/\/日志输出方式，支持控制台，文件，syslog三种方式$/;"	m	struct:_config_t
+log_dst_strs	config.c	/^static char *log_dst_strs[] = {"console", "file", "syslog"};$/;"	v	file:
+log_file	config.h	/^    char  *log_file;                             \/\/日志文件$/;"	m	struct:_config_t
+log_level	config.h	/^    int    log_level;                            \/\/日志级别$/;"	m	struct:_config_t
+m3u8_check_step	config.h	/^    int    m3u8_check_step;                      \/\/M3U8检查更新的时间间隔，单位毫秒$/;"	m	struct:_config_t
+m3u8_destroy	m3u8.c	/^void m3u8_destroy(m3u8_t *m3u8) $/;"	f
+m3u8_info_eof	m3u8.c	/^static int m3u8_info_eof(m3u8_info_t *m3u8_info)$/;"	f	file:
+m3u8_info_t	m3u8.h	/^} m3u8_info_t;$/;"	t	typeref:struct:_m3u8_info_t
+m3u8_name	channel.h	/^    char *m3u8_name;                \/* 同步后，该频道映射的M3U8文件名 *\/$/;"	m	struct:_channel_t
+m3u8_parser	m3u8.c	/^m3u8_t *m3u8_parser(char *m3u8_string)$/;"	f
+m3u8_save	m3u8.c	/^int m3u8_save(m3u8_t *m3u8, char *m3u8_path, char *ts_segment_url_prefix)$/;"	f
+m3u8_segment_t	m3u8.h	/^} m3u8_segment_t;$/;"	t	typeref:struct:_m3u8_segment_t
+m3u8_string	m3u8.h	/^    char *m3u8_string;$/;"	m	struct:_m3u8_info_t
+m3u8_t	m3u8.h	/^} m3u8_t;$/;"	t	typeref:struct:_m3u8_t
+main	channel.c	/^int main(int argc, char **argv) $/;"	f
+main	http_download.c	/^int main(int argc, char **argv) $/;"	f
+main	m3u8.c	/^int main(int argc, char **argv) $/;"	f
+main	main.c	/^int main(int argc, char ** argv) {$/;"	f
+name	channel.h	/^    char *name;                     \/* 频道名称 *\/$/;"	m	struct:_channel_t
+offset	m3u8.h	/^    int offset;$/;"	m	struct:_m3u8_info_t
+parse_args	main.c	/^static int parse_args(int argc, char **argv)$/;"	f	file:
+parse_channel_element	channel.c	/^static int parse_channel_element(channels_t *channels, xmlNodePtr channel_element)$/;"	f	file:
+read_line_from_m3u8_info	m3u8.c	/^static int read_line_from_m3u8_info(m3u8_info_t *m3u8_info, char *line_buffer, int buffer_size)$/;"	f	file:
+segment_count	m3u8.h	/^    int segment_count;$/;"	m	struct:_m3u8_t
+segments	m3u8.h	/^    m3u8_segment_t segments[MAX_SEGMENT_COUNT];$/;"	m	struct:_m3u8_t
+sequence	m3u8.h	/^    size_t sequence;$/;"	m	struct:_m3u8_t
+session_count	channel_sync.h	/^    int session_count;$/;"	m	struct:_channel_sessions_t
+set_share_handle	http_download.c	/^static void set_share_handle(CURL* curl)  $/;"	f	file:
+share_handle	http_download.c	/^static CURLSH* share_handle = NULL;  $/;"	v	file:
+show_help	main.c	/^static void show_help(const char *program)$/;"	f	file:
+show_version	main.c	/^static void show_version(const char *program)$/;"	f	file:
+signal_handle	main.c	/^static void signal_handle(int signum){$/;"	f	file:
+size	http_download.h	/^    size_t size;            \/\/内容的实际大小$/;"	m	struct:_http_buffer_t
+size	http_download.h	/^    size_t size;$/;"	m	struct:_http_file_t
+source_primary	channel.h	/^    char *source_primary;           \/* 主源 *\/$/;"	m	struct:_channel_t
+source_standby	channel.h	/^    char *source_standby;           \/* 备源 *\/$/;"	m	struct:_channel_t
+sync_continue	channel_sync.h	/^    int        sync_continue;               \/* 是否继续同步 *\/$/;"	m	struct:_channel_session_t
+sync_path	channel.h	/^    char *sync_path;                \/* 该频道存储的目录, 硬盘部分可以采用一致性哈希 *\/$/;"	m	struct:_channel_t
+sync_thread	channel_sync.h	/^    pthread_t  sync_thread;                 \/* 同步线程 *\/$/;"	m	struct:_channel_session_t
+target_duration	m3u8.h	/^    int target_duration;$/;"	m	struct:_m3u8_t
+ts_segment_url_prefix	channel.h	/^    char *ts_segment_url_prefix;    \/* 同步后，TS段映射后的前缀 *\/$/;"	m	struct:_channel_t
+url	m3u8.h	/^    char *url;$/;"	m	struct:_m3u8_segment_t
