@@ -25,6 +25,74 @@ extern config_t *_config;
 
 static void *channel_sync_func(void *user_data);
 static int combine_ts_segment_url(char *m3u8_url, char *m3u8_segment_url, char *ts_segment_url, int size); 
+static int redis_enqueue(redisContext* redisp, char* channel_name, m3u8_segment_t* tsp);
+static int redis_dequeue(redisContext* redisp, char* channel_name);
+
+int redis_enqueue(redisContext* redisp, char* channel_name, m3u8_segment_t* tsp)
+{
+    char redis_command[1024] = {0};
+    snprintf(redis_command, 1024, "rpush %s %ld:%ld:%d:%d:%s", channel_name, 
+        tsp->begin_time, tsp->end_time, tsp->duration, tsp->discontinuity, tsp->old_name);
+    redis_command[1023] = '\0';
+    redisReply *reply = redisCommand(redisp, redis_command);
+    log_info("[%s] redis_command [%s]", channel_name, redis_command);
+    freeReplyObject(reply);
+    return 0;
+}
+
+
+int redis_dequeue(redisContext* redisp, char* channel_name)
+{
+    time_t tnow = time(NULL);
+
+    char redis_command[1024] = {0};
+    snprintf(redis_command, 1024, "lrange %s 0 0", channel_name);
+    redis_command[1023] = '\0';
+
+    char redis_command2[1024] = {0};
+    snprintf(redis_command2, 1024, "lpop %s", channel_name);
+    redis_command2[1023] = '\0';
+
+    redisReply *reply1 = NULL;
+    redisReply *reply2 = NULL;
+    while(1)
+    {
+        reply1 = redisCommand(redisp, redis_command);
+        //log_info("[%s] redis_command [%s]", channel_name, redis_command);        
+        if(reply1->type != REDIS_REPLY_ARRAY || reply1->elements <= 0)
+        {            
+            break;
+        }        
+        struct redisReply *elementp = reply1->element[0];
+        time_t begin_time = atol(elementp->str);
+        time_t tdiff = tnow - begin_time;    
+        if(tdiff < _config->dns_cache_time)
+        {
+            break;
+        }
+        freeReplyObject(reply1);
+        reply1 = NULL;
+        
+        reply2 = redisCommand(redisp, redis_command2);
+        log_info("[%s] redis_command [%s], return [%s]", channel_name, redis_command2, reply2->str);
+        freeReplyObject(reply2);
+        reply2 = NULL;
+    }
+
+    if(reply1 != NULL)
+    {
+        freeReplyObject(reply1);
+        reply1 = NULL;
+    }
+    if(reply2 != NULL)
+    {
+        freeReplyObject(reply2);
+        reply2 = NULL;
+    }
+    
+    return 0;
+
+}
 
 int channel_start_sync(channel_session_t *channel_session)
 {   
@@ -219,13 +287,8 @@ static void *channel_sync_func(void *user_data)
                 continue;
             }
             m3u8_segment_t* tsp = &(m3u8->segments[i]);
-            char redis_command[1024] = {0};
-            snprintf(redis_command, 1024, "rpush %s %ld:%ld:%d:%d:%s", channel_name, 
-                tsp->begin_time, tsp->end_time, tsp->duration, tsp->discontinuity, tsp->old_name);
-            redis_command[1023] = '\0';
-            redisReply *reply = redisCommand(redis_connectp, redis_command);
-            log_info("[%s] redis_command [%s]", channel_name, redis_command);
-            freeReplyObject(reply);
+            redis_enqueue(redis_connectp, channel_name, tsp);
+            redis_dequeue(redis_connectp, channel_name);
             log_info("[%s] DOWNLOAD SPEED[%.1f Mbps];bitrate[%.2fMbps];%s", channel_name, download_speed/1024, channel->bitrate, ts_segment_url);
             //log_info("[%s] download %s to %s successfully", channel_name, ts_segment_url, ts_segment_path);
             /* download_speed单位K，bitrate单位M */
