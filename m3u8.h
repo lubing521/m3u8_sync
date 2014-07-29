@@ -28,6 +28,7 @@ typedef struct _m3u8_segment_t {
     char *new_name;
 	time_t	begin_time;
 	time_t	end_time;
+	size_t  sequence;
 } m3u8_segment_t;
 
 typedef struct _m3u8_t {

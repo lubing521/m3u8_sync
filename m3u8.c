@@ -93,7 +93,7 @@ m3u8_t *m3u8_parser(char *m3u8_string)
         str = trim_str(line); 
         if (has_segment) {
             int size = strlen(str) + 1;
-
+            m3u8->segments[m3u8->segment_count - 1].sequence = m3u8->sequence + m3u8->segment_count - 1;
             m3u8->segments[m3u8->segment_count - 1].url = (char *)malloc(size);
             bzero(m3u8->segments[m3u8->segment_count - 1].url, size);
             strcpy(m3u8->segments[m3u8->segment_count - 1].url, str);

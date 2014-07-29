@@ -31,8 +31,8 @@ static int redis_dequeue(redisContext* redisp, char* channel_name);
 int redis_enqueue(redisContext* redisp, char* channel_name, m3u8_segment_t* tsp)
 {
     char redis_command[1024] = {0};
-    snprintf(redis_command, 1024, "rpush %s %ld:%ld:%d:%d:%s", channel_name, 
-        tsp->begin_time, tsp->end_time, tsp->duration, tsp->discontinuity, tsp->old_name);
+    snprintf(redis_command, 1024, "rpush %s %ld:%ld:%d:%d:%lu:%s", channel_name, 
+        tsp->begin_time, tsp->end_time, tsp->duration, tsp->discontinuity, tsp->sequence, tsp->old_name);
     redis_command[1023] = '\0';
     redisReply *reply = redisCommand(redisp, redis_command);
     log_info("[%s] redis_command [%s]", channel_name, redis_command);
