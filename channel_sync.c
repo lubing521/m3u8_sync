@@ -21,15 +21,42 @@
 #include "http_download.h"
 #include "config.h"
 
+#define REDIS_IP    "127.0.0.1"
+#define REDIS_PORT  6379
+
 extern config_t *_config;
 
 static void *channel_sync_func(void *user_data);
 static int combine_ts_segment_url(char *m3u8_url, char *m3u8_segment_url, char *ts_segment_url, int size); 
+
+static redisContext* redis_reconnect(redisContext* redisp, char* channel_name);
 static int redis_enqueue(redisContext* redisp, char* channel_name, m3u8_segment_t* tsp);
 static int redis_dequeue(redisContext* redisp, char* channel_name);
 
+redisContext* redis_reconnect(redisContext* old_connectp, char* channel_name)
+{
+     if(old_connectp != NULL)
+    {
+        redisFree(old_connectp);
+        old_connectp = NULL;
+    }
+    redisContext* new_connectp = redisConnect(REDIS_IP, REDIS_PORT);
+    if(new_connectp != NULL && new_connectp->err)
+    {
+        log_error("[%s] connect to redis error: %s", channel_name, new_connectp->errstr);
+        redisFree(new_connectp);
+        new_connectp = NULL;
+    }  
+    return new_connectp;
+}
+
 int redis_enqueue(redisContext* redisp, char* channel_name, m3u8_segment_t* tsp)
 {
+    if(redisp == NULL)
+    {
+        return -1;
+    }
+    
     char redis_command[1024] = {0};
     snprintf(redis_command, 1024, "rpush %s %ld:%ld:%d:%d:%lu:%s", channel_name, 
         tsp->begin_time, tsp->end_time, tsp->duration, tsp->discontinuity, tsp->sequence, tsp->old_name);
@@ -47,6 +74,11 @@ int redis_enqueue(redisContext* redisp, char* channel_name, m3u8_segment_t* tsp)
 
 int redis_dequeue(redisContext* redisp, char* channel_name)
 {
+    if(redisp == NULL)
+    {
+        return -1;
+    }
+    
     time_t tnow = time(NULL);
 
     char redis_command[1024] = {0};
@@ -180,19 +212,13 @@ static void *channel_sync_func(void *user_data)
     char *m3u8_buffer = NULL;
     char *channel_name;
     channel_t *channel = session->channel;
+    redisContext *redis_connectp = NULL;
          
     bzero(&last_time, sizeof(struct timeval));
     bzero(&cur_time, sizeof(struct timeval));
     channel_name = session->channel->name;
 
-    redisContext *redis_connectp = redisConnect("127.0.0.1", 6379);
-    if(redis_connectp->err){
-        log_error("[%s] connect to redis error: %s", channel_name, redis_connectp->errstr);
-        redisFree(redis_connectp);
-        return NULL;
-    }
-    struct timeval tv = {1,0};
-    redisSetTimeout(redis_connectp, tv);
+    redis_connectp = redis_reconnect(redis_connectp, channel_name);
 
     m3u8_buffer = (char *)malloc(M3U8_BUFFER_SIZE);
     if (NULL == m3u8_buffer) {
@@ -302,7 +328,12 @@ static void *channel_sync_func(void *user_data)
                 continue;
             }
             m3u8_segment_t* tsp = &(m3u8->segments[i]);
-            redis_enqueue(redis_connectp, channel_name, tsp);
+            int ret = redis_enqueue(redis_connectp, channel_name, tsp);
+            if(ret < 0)
+            {
+                redis_connectp = redis_reconnect(redis_connectp, channel_name);
+                redis_enqueue(redis_connectp, channel_name, tsp);                
+            }             
             redis_dequeue(redis_connectp, channel_name);
             log_info("[%s] DOWNLOAD SPEED[%.1f Mbps];bitrate[%.2fMbps];%s", channel_name, download_speed/1024, channel->bitrate, ts_segment_url);
             //log_info("[%s] download %s to %s successfully", channel_name, ts_segment_url, ts_segment_path);
