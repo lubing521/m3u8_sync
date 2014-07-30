@@ -35,6 +35,10 @@ int redis_enqueue(redisContext* redisp, char* channel_name, m3u8_segment_t* tsp)
         tsp->begin_time, tsp->end_time, tsp->duration, tsp->discontinuity, tsp->sequence, tsp->old_name);
     redis_command[1023] = '\0';
     redisReply *reply = redisCommand(redisp, redis_command);
+    if(reply == NULL)
+    {
+        return -1;
+    }
     log_info("[%s] redis_command [%s]", channel_name, redis_command);
     freeReplyObject(reply);
     return 0;
@@ -58,7 +62,11 @@ int redis_dequeue(redisContext* redisp, char* channel_name)
     while(1)
     {
         reply1 = redisCommand(redisp, redis_command);
-        //log_info("[%s] redis_command [%s]", channel_name, redis_command);        
+        if(reply1 == NULL)
+        {
+            return -1;
+        }
+        //log_info("[%s] redis_command [%s]", channel_name, redis_command);     
         if(reply1->type != REDIS_REPLY_ARRAY || reply1->elements <= 0)
         {            
             break;
@@ -74,6 +82,10 @@ int redis_dequeue(redisContext* redisp, char* channel_name)
         reply1 = NULL;
         
         reply2 = redisCommand(redisp, redis_command2);
+        if(reply2 == NULL)
+        {
+            return -1;
+        }
         log_info("[%s] redis_command [%s], return [%s]", channel_name, redis_command2, reply2->str);
         freeReplyObject(reply2);
         reply2 = NULL;
@@ -176,8 +188,11 @@ static void *channel_sync_func(void *user_data)
     redisContext *redis_connectp = redisConnect("127.0.0.1", 6379);
     if(redis_connectp->err){
         log_error("[%s] connect to redis error: %s", channel_name, redis_connectp->errstr);
+        redisFree(redis_connectp);
         return NULL;
     }
+    struct timeval tv = {1,0};
+    redisSetTimeout(redis_connectp, tv);
 
     m3u8_buffer = (char *)malloc(M3U8_BUFFER_SIZE);
     if (NULL == m3u8_buffer) {
