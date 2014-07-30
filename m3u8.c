@@ -162,7 +162,9 @@ void m3u8_destroy(m3u8_t *m3u8)
         if (m3u8->segments[i].url) {
             free(m3u8->segments[i].url);
         }
-
+        if (m3u8->segments[i].old_name) {
+            free(m3u8->segments[i].old_name);
+        }
         if (m3u8->segments[i].new_name) {
             free(m3u8->segments[i].new_name);
         }
